@@ -42,6 +42,7 @@ public class UtilityForm {
 		result.setDataPubblicazione(parseDateArrivoFromString(dataPubblicazioneStringParam));
 		if (NumberUtils.isCreatable(registaIdStringParam)) {
 			result.setRegista(new Regista(Long.parseLong(registaIdStringParam)));
+//			System.out.println("e stato creato");
 		}
 		return result;
 	}

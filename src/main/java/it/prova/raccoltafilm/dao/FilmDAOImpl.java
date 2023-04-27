@@ -88,6 +88,10 @@ public class FilmDAOImpl implements FilmDAO {
 			whereClauses.add("r.minutiDurata = :minutiDurata ");
 			paramaterMap.put("minutiDurata", example.getMinutiDurata());
 		}
+		if (example.getRegista() != null) {
+			whereClauses.add("r.regista = :regista ");
+			paramaterMap.put("regista", example.getRegista());
+		}
 
 		queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");
 		queryBuilder.append(StringUtils.join(whereClauses, " and "));
