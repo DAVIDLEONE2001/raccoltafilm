@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import it.prova.raccoltafilm.model.Film;
 import it.prova.raccoltafilm.service.FilmService;
 import it.prova.raccoltafilm.service.MyServiceFactory;
+import it.prova.raccoltafilm.service.RegistaService;
+import it.prova.raccoltafilm.utility.UtilityForm;
 
 @WebServlet("/ExecuteSearchFilmServlet")
 public class ExecuteSearchFilmServlet extends HttpServlet {
@@ -18,18 +20,30 @@ public class ExecuteSearchFilmServlet extends HttpServlet {
 
 	// injection del Service
 	private FilmService filmService;
+	private RegistaService registaService;
 
 	public ExecuteSearchFilmServlet() {
 		this.filmService = MyServiceFactory.getFilmServiceInstance();
+		this.registaService = MyServiceFactory.getRegistaServiceInstance();
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		
+		String titoloParams = request.getParameter("titolo");
+		String genereParams = request.getParameter("genere");
+		String dataPubParams = request.getParameter("dataPubblicazione");
+		String durataParams = request.getParameter("minutiDurata");
+		String idRegistaParams = request.getParameter("regista.id");
+		
 
+		
 		// da implementare
-		Film example = new Film();
-
+		Film example = UtilityForm.createFilmFromParams(titoloParams, genereParams, durataParams, dataPubParams , idRegistaParams);
+		
 		try {
+
 			request.setAttribute("film_list_attribute", filmService.findByExample(example));
 		} catch (Exception e) {
 			e.printStackTrace();

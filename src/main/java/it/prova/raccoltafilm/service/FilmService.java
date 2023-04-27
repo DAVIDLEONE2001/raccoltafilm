@@ -12,7 +12,7 @@ public interface FilmService {
 	
 	public Film caricaSingoloElementoEager(Long id) throws Exception;
 
-	public void aggiorna(Film filmInstance) throws Exception;
+	public void aggiorna(Film filmInstance);
 
 	public void inserisciNuovo(Film filmInstance) throws Exception;
 
