@@ -1,11 +1,17 @@
 package it.prova.raccoltafilm.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang3.StringUtils;
+
+import it.prova.raccoltafilm.model.Regista;
 import it.prova.raccoltafilm.model.Ruolo;
 import it.prova.raccoltafilm.model.StatoUtente;
 import it.prova.raccoltafilm.model.Utente;
@@ -86,4 +92,73 @@ public class UtenteDAOImpl implements UtenteDAO {
 		return query.getResultStream().findFirst();
 	}
 
+	@Override
+	public List<Utente> findByExample(Utente example) throws Exception {
+		Map<String, Object> paramaterMap = new HashMap<String, Object>();
+		List<String> whereClauses = new ArrayList<String>();
+
+		StringBuilder queryBuilder = new StringBuilder("select r from Utente r where r.id = r.id ");
+
+		if (StringUtils.isNotEmpty(example.getNome())) {
+			whereClauses.add(" r.nome  like :nome ");
+			paramaterMap.put("nome", "%" + example.getNome() + "%");
+		}
+		if (StringUtils.isNotEmpty(example.getCognome())) {
+			whereClauses.add(" r.cognome like :cognome ");
+			paramaterMap.put("cognome", "%" + example.getCognome() + "%");
+		}
+		if (StringUtils.isNotEmpty(example.getUsername())) {
+			whereClauses.add(" r.username like :username ");
+			paramaterMap.put("username", "%" + example.getUsername() + "%");
+		}
+		if (example.getDateCreated() != null) {
+			whereClauses.add("r.dateCreated >= :dateCreated ");
+			paramaterMap.put("dateCreated", example.getDateCreated());
+		}
+		if (example.getStato() != null) {
+			whereClauses.add("r.stato like :stato ");
+			paramaterMap.put("stato", example.getStato());
+		}
+		queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");
+		  queryBuilder.append(StringUtils.join(whereClauses, " and "));
+		  TypedQuery<Utente> typedQuery =
+		  entityManager.createQuery(queryBuilder.toString(), Utente.class);
+		  
+		  for (String key : paramaterMap.keySet()) { typedQuery.setParameter(key,
+		  paramaterMap.get(key)); }
+		  
+		  return typedQuery.getResultList();
+
+		/*
+		 * Map<String, Object> paramaterMap = new HashMap<String, Object>();
+		 * List<String> whereClauses = new ArrayList<String>();
+		 * 
+		 * StringBuilder queryBuilder = new
+		 * StringBuilder("select r from Regista r where r.id = r.id ");
+		 * 
+		 * if (StringUtils.isNotEmpty(example.getNome())) {
+		 * whereClauses.add(" r.nome  like :nome "); paramaterMap.put("nome", "%" +
+		 * example.getNome() + "%"); } if (StringUtils.isNotEmpty(example.getCognome()))
+		 * { whereClauses.add(" r.cognome like :cognome "); paramaterMap.put("cognome",
+		 * "%" + example.getCognome() + "%"); } if
+		 * (StringUtils.isNotEmpty(example.getNickName())) {
+		 * whereClauses.add(" r.nickName like :nickName "); paramaterMap.put("nickName",
+		 * "%" + example.getNickName() + "%"); } if (example.getSesso() != null) {
+		 * whereClauses.add(" r.sesso =:sesso "); paramaterMap.put("sesso",
+		 * example.getSesso()); } if (example.getDataDiNascita() != null) {
+		 * whereClauses.add("r.dataDiNascita >= :dataDiNascita ");
+		 * paramaterMap.put("dataDiNascita", example.getDataDiNascita()); }
+		 * 
+		 * queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");
+		 * queryBuilder.append(StringUtils.join(whereClauses, " and "));
+		 * TypedQuery<Regista> typedQuery =
+		 * entityManager.createQuery(queryBuilder.toString(), Regista.class);
+		 * 
+		 * for (String key : paramaterMap.keySet()) { typedQuery.setParameter(key,
+		 * paramaterMap.get(key)); }
+		 * 
+		 * return typedQuery.getResultList();
+		 */
+
+	}
 }

@@ -41,7 +41,6 @@ public class ExecuteDeleteRegistaServlet extends HttpServlet {
 			if (!registaService.caricaSingoloElementoConFilms(Long.parseLong(idRegistaParam)).getFilms().isEmpty()){
 			
 				throw new RegistaConFilmException("Errore");
-				
 			}
 		} catch (RegistaConFilmException e) {
 			request.setAttribute("errorMessage", "Errore: Regista Con Film");
